@@ -127,13 +127,21 @@ async def list_schemas() -> str:
 @mcp.tool()
 async def list_tables(schema_name: str = "public") -> str:
     """
-    List all tables in a specific schema.
+    List all tables in a specific schema. 
+    
+    IMPORTANT: Always explicitly specify the schema_name parameter based on the context of the query.
+    Do not rely on the default value unless you specifically want to query the 'public' schema.
     
     Args:
-        schema_name: Name of the schema to list tables from
+        schema_name: The name of the schema to list tables from. Must be explicitly provided 
+                     based on which schema you want to query. Defaults to "public" only if not specified.
     
     Returns:
-        A formatted string containing all table names in the schema
+        A formatted string containing all table names in the specified schema.
+    
+    Example:
+        - To list tables in 'my_schema': call with schema_name="my_schema"
+        - To list tables in 'public': call with schema_name="public"
     """
     try:
         db = DatabaseConnection()
@@ -157,9 +165,20 @@ async def describe_table(table_name: str, schema_name: str = "public") -> str:
     """
     Describe the structure of a specific table including columns, types, and constraints.
     
+    IMPORTANT: Always explicitly specify the schema_name parameter based on the context of the query.
+    Do not rely on the default value unless you specifically want to query the 'public' schema.
+    
     Args:
         table_name: Name of the table to describe
-        schema_name: Name of the schema (default: "public")
+        schema_name: The name of the schema containing the table. Must be explicitly provided 
+                     based on which schema the table belongs to. Defaults to "public" only if not specified.
+    
+    Returns:
+        A formatted string with table structure including columns, types, constraints, primary keys, and foreign keys.
+    
+    Example:
+        - To describe 'users' table in 'my_schema': call with table_name="users", schema_name="my_schema"
+        - To describe 'orders' table in 'public': call with table_name="orders", schema_name="public"
     """
     try:
         db = DatabaseConnection()
@@ -306,10 +325,21 @@ async def get_sample_data(table_name: str, schema_name: str = "public", limit: i
     """
     Get sample data from a table to understand its content.
     
+    IMPORTANT: Always explicitly specify the schema_name parameter based on the context of the query.
+    Do not rely on the default value unless you specifically want to query the 'public' schema.
+    
     Args:
-        table_name: Name of the table
-        schema_name: Name of the schema (default: "public")
-        limit: Number of rows to return (default: 5)
+        table_name: Name of the table to get sample data from
+        schema_name: The name of the schema containing the table. Must be explicitly provided 
+                     based on which schema the table belongs to. Defaults to "public" only if not specified.
+        limit: Number of rows to return (default: 5, maximum recommended: 50)
+    
+    Returns:
+        A formatted string with sample data from the specified table.
+    
+    Example:
+        - To get 5 rows from 'products' in 'inventory_schema': call with table_name="products", schema_name="inventory_schema"
+        - To get 10 rows from 'users' in 'public': call with table_name="users", schema_name="public", limit=10
     """
     try:
         sql_query = f'SELECT * FROM "{schema_name}"."{table_name}" LIMIT {limit}'
