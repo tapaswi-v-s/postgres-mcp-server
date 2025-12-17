@@ -42,7 +42,7 @@ class DatabaseConnection:
         if not all([db_host, db_name, db_user, db_password]):
             raise ValueError("Missing required database environment variables")
         
-        connection_string = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+        connection_string = f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}?sslmode=require&channel_binding=require"
         self._engine = create_engine(connection_string, pool_pre_ping=True)
     
     def get_engine(self):
