@@ -130,7 +130,10 @@ async def list_tables(schema_name: str = "public") -> str:
     List all tables in a specific schema.
     
     Args:
-        schema_name: Name of the schema to list tables from (default: "public")
+        schema_name: Name of the schema to list tables from
+    
+    Returns:
+        A formatted string containing all table names in the schema
     """
     try:
         db = DatabaseConnection()
