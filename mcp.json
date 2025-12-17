@@ -1,0 +1,155 @@
+{
+  "name": "sql-agent-mcp-server",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for database operations and SQL query execution",
+  "author": "SQL Agent Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/sql-agent-mcp"
+  },
+  "runtime": {
+    "type": "python",
+    "version": "3.10",
+    "entry_point": "server.py"
+  },
+  "dependencies": {
+    "file": "requirements.txt"
+  },
+  "configuration": {
+    "file": "config.yaml",
+    "schema": "https://mcp-cloud.ai/schemas/config/v1.json"
+  },
+  "environment_variables": {
+    "required": [
+      {
+        "name": "DB_HOST",
+        "description": "Database host address",
+        "type": "string"
+      },
+      {
+        "name": "DB_PORT",
+        "description": "Database port",
+        "type": "integer",
+        "default": 5432
+      },
+      {
+        "name": "DB_NAME",
+        "description": "Database name",
+        "type": "string"
+      },
+      {
+        "name": "DB_USER",
+        "description": "Database username",
+        "type": "string"
+      },
+      {
+        "name": "DB_PASSWORD",
+        "description": "Database password",
+        "type": "string",
+        "sensitive": true
+      }
+    ],
+    "optional": [
+      {
+        "name": "LOG_LEVEL",
+        "description": "Logging level",
+        "type": "string",
+        "default": "INFO"
+      }
+    ]
+  },
+  "tools": [
+    {
+      "name": "list_schemas",
+      "description": "List all schemas in the OMNI_STORE database",
+      "type": "query",
+      "safe": true
+    },
+    {
+      "name": "list_tables",
+      "description": "List all tables in a specific schema",
+      "type": "query",
+      "safe": true
+    },
+    {
+      "name": "describe_table",
+      "description": "Describe the structure of a specific table",
+      "type": "query",
+      "safe": true
+    },
+    {
+      "name": "execute_select_query",
+      "description": "Execute a SELECT query on the database",
+      "type": "query",
+      "safe": true
+    },
+    {
+      "name": "execute_write_query",
+      "description": "Execute write operations on the database",
+      "type": "mutation",
+      "safe": false,
+      "requires_confirmation": true
+    },
+    {
+      "name": "get_sample_data",
+      "description": "Get sample data from a table",
+      "type": "query",
+      "safe": true
+    }
+  ],
+  "health_check": {
+    "enabled": true,
+    "endpoint": "/health",
+    "interval": 30,
+    "timeout": 5
+  },
+  "metrics": {
+    "enabled": true,
+    "endpoint": "/metrics"
+  },
+  "scaling": {
+    "min_instances": 1,
+    "max_instances": 3,
+    "cpu_threshold": 80,
+    "memory_threshold": 80
+  },
+  "resources": {
+    "memory": "512Mi",
+    "cpu": "0.5",
+    "timeout": 60
+  },
+  "security": {
+    "rate_limiting": {
+      "enabled": true,
+      "max_requests_per_minute": 60
+    },
+    "query_filtering": {
+      "enabled": true
+    },
+    "ip_whitelist": []
+  },
+  "tags": [
+    "database",
+    "sql",
+    "postgresql",
+    "agent",
+    "mcp",
+    "query-engine"
+  ],
+  "keywords": [
+    "sql",
+    "database",
+    "postgresql",
+    "mcp",
+    "model-context-protocol",
+    "agent",
+    "llm",
+    "ai"
+  ],
+  "platform": {
+    "target": "mcp-cloud.ai",
+    "deployment_type": "serverless"
+  }
+}
+

@@ -1,0 +1,129 @@
+# MCP Server Configuration for SQL Agent
+# This configuration file contains all settings for the SQL Agent MCP Server
+# hosted on mcp-cloud.ai
+
+server:
+  name: "sql-agent-mcp-server"
+  version: "1.0.0"
+  description: "Model Context Protocol server for database operations and SQL query execution"
+  author: "SQL Agent Team"
+  
+  # Server settings
+  settings:
+    # Protocol version
+    protocol_version: "1.0"
+    
+    # Logging configuration
+    logging:
+      level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+      format: "json"
+      
+    # Connection settings
+    connection:
+      timeout: 30  # Connection timeout in seconds
+      max_retries: 3
+      retry_delay: 2  # Delay between retries in seconds
+
+# Database configuration
+database:
+  # Connection parameters (use environment variables for sensitive data)
+  host: "${DB_HOST}"
+  port: "${DB_PORT:5432}"  # Default to 5432 if not specified
+  name: "${DB_NAME}"
+  user: "${DB_USER}"
+  password: "${DB_PASSWORD}"
+  
+  # Connection pool settings
+  pool:
+    size: 5
+    max_overflow: 10
+    timeout: 30
+    recycle: 3600  # Recycle connections after 1 hour
+    pre_ping: true  # Enable connection health checks
+
+# Tools configuration
+tools:
+  # List of enabled tools
+  enabled:
+    - list_schemas
+    - list_tables
+    - describe_table
+    - execute_select_query
+    - execute_write_query
+    - get_sample_data
+  
+  # Tool-specific settings
+  settings:
+    execute_select_query:
+      max_rows: 100  # Maximum rows to return in results
+      timeout: 60  # Query timeout in seconds
+      
+    execute_write_query:
+      require_confirmation: true  # Always require user confirmation
+      timeout: 120  # Query timeout in seconds
+      
+    get_sample_data:
+      default_limit: 5
+      max_limit: 50
+
+# Security settings
+security:
+  # Query filtering (prevent dangerous operations)
+  query_filtering:
+    enabled: true
+    blocked_keywords:
+      - "DROP DATABASE"
+      - "DROP SCHEMA"
+    
+  # Rate limiting (queries per minute per user)
+  rate_limiting:
+    enabled: true
+    max_queries_per_minute: 60
+    
+  # IP whitelist (leave empty to allow all)
+  ip_whitelist: []
+
+# Deployment configuration for mcp-cloud.ai
+deployment:
+  platform: "mcp-cloud.ai"
+  
+  # Environment
+  environment: "production"  # Options: development, staging, production
+  
+  # Health check endpoint
+  health_check:
+    enabled: true
+    endpoint: "/health"
+    interval: 30  # Health check interval in seconds
+  
+  # Metrics and monitoring
+  monitoring:
+    enabled: true
+    metrics_endpoint: "/metrics"
+    
+  # Auto-scaling (if supported by mcp-cloud.ai)
+  scaling:
+    enabled: false
+    min_instances: 1
+    max_instances: 3
+    cpu_threshold: 80  # Scale up when CPU usage exceeds this percentage
+
+# Error handling
+error_handling:
+  # Return detailed error messages
+  detailed_errors: false  # Set to true for development
+  
+  # Retry configuration
+  retry:
+    enabled: true
+    max_attempts: 3
+    backoff_multiplier: 2
+
+# Features flags
+features:
+  # Enable/disable specific features
+  transaction_support: true
+  query_caching: false
+  query_validation: true
+  sql_formatting: true
+
